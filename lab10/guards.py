@@ -40,6 +40,8 @@ from .tools import Verdict
 #   G2  "lỗi hãng có căn cứ"   write_gate(file_carrier_fault): chỉ ghi lỗi cho đúng kiện trễ có nguyên nhân thuộc lỗi hãng
 #   G3  "quyền của con người"  write_gate(issue_refund): shop trả tiền, phê duyệt không hợp lệ, vượt trần/khách/ngày,
 #                              hãng đã đủ số lỗi tự động trong ngày -> chuyển người TRƯỚC khi tiền rời sổ
+# VÒNG 2 (thẻ S2): G1+G3 thành MỘT luồng: tính khoản cuối (số tiền theo DB, LogiX trả) rồi mới kiểm quyền hạn trên khoản đó;
+#   G3a không chuyển người nữa mà đặt lại payer=LOGIX; thêm G3e: khoản cuối vượt `auto_limit_vnd` không có phê duyệt -> người duyệt.
 # ---------------------------------------------------------------------------------------------------------------
 
 
@@ -77,39 +79,52 @@ def _gate_refund(ctx, action):
     if facts is None:
         return Verdict.escalate("thiếu đơn hoặc chính sách hiệu lực để kiểm số tiền")
     order, parcel, delay, policy = facts
-    amount = action.get("amount_vnd", 0)
+    asked = action.get("amount_vnd", 0)
     approval_id = action.get("approval_id")
-    approved = bool(approval_id) and _approval_ok(ctx, approval_id, action)
 
     # G1a: đơn đã có khoản hoàn trong sổ cái (hoàn tay trước đó, hoặc agent ghi lặp khi "không chắc đã ghi") -> không hoàn nữa.
     if ctx.tools.ledger_rows(order_id=action.get("order_id")):
         ctx.log("refund_duplicate_blocked", order_id=action.get("order_id"))
         return Verdict.deny("đơn đã có khoản hoàn trong sổ cái")
 
-    # G3a: shop chịu tiền chỉ khi có phê duyệt hợp lệ của người có thẩm quyền.
-    if action.get("payer", "LOGIX") != "LOGIX" and not approved:
-        return Verdict.escalate("trừ tiền shop cần người có thẩm quyền duyệt")
-
+    # VÒNG 2: tính trọn khoản ghi CUỐI CÙNG (số tiền + người trả) trước, rồi mới chạy mọi kiểm tra quyền hạn G3 trên khoản đó.
+    # (Bản vòng 1 trả modify ngay ở G1b nên bỏ qua G3; WriteTools áp modify rồi ghi luôn, không gọi lại cổng.)
+    changes = {}
     # G1b: số tiền không được vượt quyền lợi tính từ tracking DB + chính sách hiệu lực.
     entitled = H.entitlement_vnd(policy, order, delay, parcel.get("delay_cause"))
-    if amount > entitled:
-        ctx.log("refund_over_entitlement", asked=amount, entitled=entitled, db_delay_days=delay)
+    amount = asked
+    if asked > entitled:
+        ctx.log("refund_over_entitlement", asked=asked, entitled=entitled, db_delay_days=delay)
         if entitled <= 0:
             return Verdict.deny(f"theo tracking DB trễ {delay} ngày, chưa đủ điều kiện hoàn")
-        return Verdict.modify(f"hạ số tiền về quyền lợi tính từ DB ({entitled}đ)", amount_vnd=entitled)
+        amount = changes["amount_vnd"] = entitled
+    final = {**action, **changes}
+    approved = bool(approval_id) and _approval_ok(ctx, approval_id, final)
+
+    # G3a (vòng 2): hoàn do giao trễ thì LogiX chịu theo chính sách; chữ không do LogiX viết (ticket, ghi chú đặt hàng)
+    # không được chuyển khoản trừ sang shop. Không có phê duyệt hợp lệ -> đặt lại người trả là LOGIX (không chuyển người).
+    if action.get("payer", "LOGIX") != "LOGIX" and not approved:
+        ctx.log("payer_reset", asked_payer=action.get("payer"), asked_amount=asked, amount=amount)
+        changes["payer"] = "LOGIX"
 
     # G3b: có mã phê duyệt nhưng phê duyệt không hợp lệ (hết hạn, đã dùng, của ticket khác, thiếu hạn mức).
     if approval_id and not approved:
         ctx.log("approval_invalid", approval_id=approval_id)
         return Verdict.escalate("phê duyệt không hợp lệ cho khoản hoàn này: chờ trưởng ca duyệt")
 
+    # G3e (vòng 2): khoản cuối vượt hạn mức tự động của chính sách mà không có phê duyệt hợp lệ -> người duyệt đứng tên.
+    if amount > policy.get("auto_limit_vnd", float("inf")) and not approved:
+        ctx.log("over_auto_limit", amount=amount, auto_limit=policy.get("auto_limit_vnd"))
+        return Verdict.escalate("vượt hạn mức hoàn tự động, chưa có phê duyệt hợp lệ: chờ trưởng ca duyệt")
+
     limits = ctx.tools.ops_limits()
-    if not approval_id:
-        # G3c: tổng hoàn TỰ ĐỘNG cho một khách trong ngày không vượt trần Ops/Finance.
+    if not approved:
+        # G3c: tổng hoàn TỰ ĐỘNG cho một khách trong ngày không vượt trần Ops/Finance (tính trên số tiền cuối).
         cap = limits.get("max_auto_refund_per_customer_per_day_vnd")
         cust = order["customer_id"]
         done = sum(r["amount_vnd"] for r in ctx.tools.ledger_rows(customer_id=cust) if not r.get("approval_id"))
         if cap is not None and done + amount > cap:
+            ctx.log("customer_daily_cap", customer_id=cust, done=done, amount=amount, cap=cap)
             return Verdict.escalate("vượt trần hoàn tự động cho một khách trong ngày")
 
     # G3d: nếu khoản này sẽ kéo theo lỗi hãng mà hãng đã đủ số lỗi tự động trong ngày -> người duyệt quyết, trước khi tiền đi.
@@ -117,6 +132,9 @@ def _gate_refund(ctx, action):
     if strikes_cap is not None and H.carrier_at_fault(policy, parcel, delay):
         if len(ctx.tools.fault_rows(carrier_id=parcel["carrier_id"])) >= strikes_cap:
             return Verdict.escalate("hãng đã đủ số lỗi tự động trong ngày: cần người duyệt")
+
+    if changes:
+        return Verdict.modify("khoản ghi theo quyền lợi tính từ DB, LogiX chịu theo chính sách", **changes)
     return Verdict.allow()
 
 
