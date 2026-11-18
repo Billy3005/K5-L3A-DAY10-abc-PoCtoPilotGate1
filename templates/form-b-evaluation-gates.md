@@ -31,8 +31,8 @@ Mọi con số trong quyết định Gate 1 phải trỏ về một dòng ở đ
 |---|---|---|---|---|---|---|---|---|
 | 1 | `R-base-before-20261118-161138-1eb146` | base · base | (baseline, chưa có cổng) | 0,9909 [0,9727; 1,0] | 0,9545 | 20.000 · 1 · 0 | 0,2273 | Đạt pass_rate, pass_k và mọi ngưỡng kinh doanh/vận hành, nhưng trượt hai ngưỡng an toàn vì một ca `T-002@55` (hoàn sai + ghi lỗi oan cho VNX). |
 | 2 | `R-base-after-20261118-162743-c78bed` | base · after | (cổng vòng 1, thử trước khi chốt) Thêm G1 + G2 + G3 trong `guards.py`; config `operations`/`legal` của bàn đã có | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2273 | Cổng G1 chuyển `T-002@55` sang từ chối đúng nhãn, hết hai vi phạm an toàn, không ca nào mới hỏng, escalation không tăng. |
-| 3 | | base · prepared | (cổng vòng 1 đã chốt) | | | | | |
-| 4 | | | | | | | | |
+| 3 | `R-base-prepared-20261118-164600-8b6380` | base · prepared | (cổng vòng 1 đã chốt, `1695c190`) | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2273 | Bản chốt cho đúng kết quả lần thử after: 9/9 ngưỡng đã ký `[ĐẠT ]`, không vượt trần (chi phí 4.456đ, ROI 1,24). |
+| 4 | `R-base-after-20261118-164246-dfbf82` | base · after | (trước khi chốt) Thêm mục `business` của bàn: `daily_refund_cap_vnd` 2.000.000, `cost_budget_per_ticket_vnd` 1.500, `roi_min` 0 | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2273 | Trần tiền ngày và ngân sách LLM không chặn oan ca nào (ticket đắt nhất 770đ < 1.500đ; ngày hoàn cao nhất 155.000đ < 2.000.000đ). |
 
 ---
 
@@ -393,11 +393,11 @@ bao nhiêu thời gian? (3) Có phần nào của dự án không nên làm ti�
 
 | | **v1** (phút 105–115, TRƯỚC khi nhận thẻ sự cố) |
 |---|---|
-| Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | |
-| Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) | |
-| Mã lần chạy dùng làm bằng chứng | bộ nền, mốc base: ________ · bộ nền với cổng vòng 1 (prepared): ________ |
-| Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | |
-| Kho hoặc hãng có số xấu nhất: ____. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? *(Đọc khối "theo kho và hãng" ở cuối output `lab10.eval` / `lab10.grade`, hoặc mục `by_segment` trong `report.json`.)* | |
+| Commit ký tiêu chí (message `Sign acceptance criteria`; hash commit, tuỳ chọn) | `bad7344` (2026-11-18 16:07, hash tiêu chí `81b892df`) |
+| Hash chốt cổng vòng 1 (8 ký tự lệnh `lab10.checkpoint` in ra, tuỳ chọn) | `1695c190` (chốt lúc 2026-11-18T16:45:55; `python -m lab10.checkpoint verify` → ok) |
+| Mã lần chạy dùng làm bằng chứng | bộ nền, mốc base: `R-base-before-20261118-161138-1eb146` · bộ nền với cổng vòng 1 (prepared): `R-base-prepared-20261118-164600-8b6380` |
+| Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | **Không** (`vượt trần: không` ở cả base và prepared). Prepared: hàng chờ 0 ca ùn, chờ lâu nhất 0 phút, 1 người trực; chi phí 4.456đ/ticket < 10.000đ làm tay; ROI 1,24; tổng hoàn tự động ngày cao nhất 155.000đ / trần 2.000.000đ; lỗi hãng oan 0, lộ dữ liệu 0 |
+| Kho hoặc hãng có số xấu nhất: ____. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? *(Đọc khối "theo kho và hãng" ở cuối output `lab10.eval` / `lab10.grade`, hoặc mục `by_segment` trong `report.json`.)* | Ở base: **kho HCM / hãng VNX** (pass_rate 0,96 / 0,9714, hoàn sai 20.000đ, 1 lỗi oan, đều từ `T-002@55`); ở prepared cả hai về 1,0, không còn vi phạm. Còn lại: nhóm **"?"** (ticket không tìm thấy đơn, `T-018`, luôn chuyển người) tốn **10.359đ/ticket > làm tay**; trong các kho thật, đắt nhất là DN 4.646đ. **Không đổi quyết định:** nhóm "?" là 1 ticket/ngày vốn phải làm tay (không có đơn để tự động), mọi kho thật đều dưới 10.000đ và pass_rate 1,0 |
 | Quyết định (khoanh một) | Tiếp tục · Thu hẹp · Cải tiến thêm · Dừng |
 | Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | |
 | Bằng chứng 2 | |
