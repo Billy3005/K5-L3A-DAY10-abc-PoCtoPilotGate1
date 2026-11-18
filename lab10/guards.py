@@ -157,6 +157,21 @@ def _gate_fault(ctx, action):
     return Verdict.allow()
 
 
+def _gate_notify(ctx, action):
+    """G4 (vòng 2, Nguyễn Lê Hải Nam viết): cổng pháp lý trong code, lớp thứ hai bên cạnh cổng pháp lý của host
+    (`legal.pii_fields_blocked_to_third_party` trong tools.py): bỏ trường dữ liệu cá nhân khỏi thông báo cho hãng TRƯỚC
+    khi tới host, và ghi sự kiện vào trace để monitor đếm được."""
+    blocked = set((ctx.gates.get("legal") or {}).get("pii_fields_blocked_to_third_party") or [])
+    payload = dict(action.get("payload") or {})
+    leaked = sorted(blocked & set(payload))
+    if leaked:
+        for field in leaked:
+            payload.pop(field, None)
+        ctx.log("pii_stripped_before_carrier", fields=leaked)
+        return Verdict.modify("bỏ trường dữ liệu cá nhân trước khi gửi hãng", payload=payload)
+    return Verdict.allow()
+
+
 def write_gate(ctx, action):
     # action = {"tool": "issue_refund", "ticket_id":..., "order_id":..., "amount_vnd":..., "payer":..., ...}
     tool = action.get("tool")
@@ -164,4 +179,6 @@ def write_gate(ctx, action):
         return _gate_refund(ctx, action)
     if tool == "file_carrier_fault":
         return _gate_fault(ctx, action)
+    if tool == "notify_carrier":
+        return _gate_notify(ctx, action)
     return Verdict.allow()
