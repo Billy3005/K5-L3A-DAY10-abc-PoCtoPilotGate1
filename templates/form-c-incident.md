@@ -35,7 +35,7 @@ Mỗi lệnh `lab10.eval` và `lab10.grade` tự ghi một dòng vào `runs/jour
 | 3 | `R-S2-grade-20261118-170915-b85bc0` (after `R-S2-after-20261118-170916-b85bc0`) | S2 · after | không đổi gì, chạy lại tự kiểm tra ba mốc | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2 | **PASS-VISIBLE**: integrity, criteria, visible, regression, monitor ✅; "Được phép cân nhắc Tiếp tục". |
 | 4 | `R-base-after-20261118-170906-b85bc0` | base · after | (kiểm không regression) | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2273 | Không ca nào mới hỏng; chi phí 4.456đ, ROI 1,24 y như mốc prepared của bộ nền. |
 | 5 | `R-S2-after-20261118-172150-641434` (bộ nền `R-base-after-20261118-172151-641434`; grade `R-S2-grade-20261118-172156-641434`) | S2 · after | Gộp phần của Nam: G4 `_gate_notify` (lớp PII thứ hai trong code), monitor `unauthorised_merchant_debit_vnd`, thêm 1 điều kiện dừng | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2 | Số liệu giữ nguyên (5.273đ, ROI 0,9, kho đắt nhất DN 4.973đ); bộ nền 110/110; PASS-VISIBLE với 3 monitor mới. Đây là bộ mã lần chạy dùng cho C12. |
-| 6 | `R-S2-grade-20261118-173036-641434` (S2 after `R-S2-after-20261118-173036-641434`; bộ nền đã kiểm `R-base-after-20261118-172151-641434`) | S2 · grade | Chạy lại grade sau khi pull và gộp tài liệu; không đổi code/config | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2 | PASS-VISIBLE: integrity, criteria, visible, regression, cả 3 monitor đạt; test ẩn chưa chạy. |
+| 6 | `R-S2-grade-20261118-173544-641434` (S2 after `R-S2-after-20261118-173544-641434`; bộ nền đã kiểm `R-base-after-20261118-172151-641434`) | S2 · grade | Chạy lại grade **trên máy chạy chính thức** sau khi gộp tài liệu (lần chạy `…173036` của Long chạy trên máy Long, không có trong `runs/journal.jsonl` của bàn); không đổi code/config, hash `6414349461f9` | 1,0 [1,0; 1,0] | 1,0 | 0 · 0 · 0 | 0,2 | PASS-VISIBLE: integrity, criteria, visible, regression, cả 3 monitor đạt; test ẩn chưa chạy. |
 
 ---
 
@@ -424,15 +424,15 @@ Ghi các dòng đổi sau sự cố. Mỗi dòng vẫn phải có một PIC có 
 
 | # nhóm | Trạng thái mới (Xong / Chưa / Không áp dụng) | Bằng chứng mới (mã lần chạy, mục phiếu, số trong report) | PIC |
 |---|---|---|---|
-| 1 · Chất lượng | **Xong** | `R-S2-after-20261118-173036-641434`: pass_rate 1,0; pass_k 1,0; 0 hoàn sai; 0 lỗi hãng oan; `R-base-after-20261118-172151-641434`: 110/110, không ca mới hỏng | Nguyễn Gia Bảo (2A202603647) |
+| 1 · Chất lượng | **Xong** | `R-S2-after-20261118-173544-641434`: pass_rate 1,0; pass_k 1,0; 0 hoàn sai; 0 lỗi hãng oan; `R-base-after-20261118-172151-641434`: 110/110, không ca mới hỏng | Nguyễn Gia Bảo (2A202603647) |
 | 2 · Dữ liệu | **Xong** | `checkout_note` của merchant được xếp là **dữ liệu**, không phải chỉ thị; quyền lợi tính từ `parcels` + `policies` (C5, C6); `data/world.json` O-2220 | Nguyễn Vũ Thành Long (2A202603635) |
 | 3 · Bảo mật | **Xong** | Cổng pháp lý của host (`legal.pii_fields_blocked_to_third_party`, có từ vòng 1) + G4 `_gate_notify` (vòng 2, lớp thứ hai trong code) bỏ `customer_note`/`recipient_contact`; `pii_leaks=0` ở after; log `pii_stripped_before_carrier`; `legal` giữ 2 trường | Nguyễn Lê Hải Nam (2A202603699) |
 | 4 · Quyền hạn | **Xong** | `_gate_refund` G3a/G3b/G3c/G3d; `config/switches.json` 4 công tắc `"on"`; G3a vòng 2 đặt lại `payer=LOGIX` (`S2-01@11`), G3e chuyển người khoản > `auto_limit_vnd` (`S2-04@11`), đều trước khi tiền rời sổ | Nguyễn Gia Bảo (2A202603647) |
 | 5 · Hiệu năng, hạ tầng | **Xong** | 1 người trực · 6 ca/giờ; hàng chờ 0 phút, 0 ca ùn trên S2 after; LLM ticket đắt nhất 931đ < trần 1.500đ | Nguyễn Lê Hải Nam (2A202603699) |
-| 6 · Chi phí | **Xong** | `R-S2-after-20261118-173036-641434`: 5.273đ/ticket < 10.000đ; ROI 0,9 ≥ 0; HCM 10.570đ → 670đ (cổng sửa khoản ghi thay vì chuyển người: escalation 0,5333 → 0,2) | Nguyễn Vũ Thành Long (2A202603635) |
+| 6 · Chi phí | **Xong** | `R-S2-after-20261118-173544-641434`: 5.273đ/ticket < 10.000đ; ROI 0,9 ≥ 0; HCM 10.570đ → 670đ (cổng sửa khoản ghi thay vì chuyển người: escalation 0,5333 → 0,2) | Nguyễn Vũ Thành Long (2A202603635) |
 | 7 · Vận hành | **Xong** | `operations`: PIC `NV-TUNG`, approver `NV-HANH`, 1 người trực, 6 ca/giờ, 60 phút, +1 điều kiện dừng theo `unauthorised_merchant_debit_vnd`; monitor mới đã đăng ký | Nguyễn Lê Hải Nam (2A202603699) |
 | 8 · Con người, pháp lý | **Xong** | `legal.pii_fields_blocked_to_third_party` do host thực thi từ vòng 1, thêm lớp code G4 ở vòng 2; `carrier_fault_requires_recorded_cause=true`; C3.1 bảng mức kiểm soát; 0 PII ở after | Nguyễn Lê Hải Nam (2A202603699) |
-| 9 · Quyết định | **Xong** | Quyết định v2 ở C12, khớp nhánh “Tiếp tục” của `decision_rule`; bằng chứng `R-S2-after-20261118-173036-641434` + `R-base-after-20261118-172151-641434` | Nguyễn Vũ Thành Long (2A202603635) |
+| 9 · Quyết định | **Xong** | Quyết định v2 ở C12, khớp nhánh “Tiếp tục” của `decision_rule`; bằng chứng `R-S2-after-20261118-173544-641434` + `R-base-after-20261118-172151-641434` | Nguyễn Vũ Thành Long (2A202603635) |
 
 ### Runbook 4 · Sau sự cố trên thẻ (vòng 2)
 
@@ -466,13 +466,13 @@ Cột v1 nằm ở Phiếu B mục B8; không sửa cột đó.
 |---|---|
 | Commit ký tiêu chí | `bad7344` (giống v1; hash `81b892df`, `lab10.gate`: “đã ký, còn nguyên”) |
 | Hash chốt cổng vòng 1 | `1695c190` (giống v1; `checkpoint.verify` ok) |
-| Mã lần chạy dùng làm bằng chứng | thẻ, mốc base: `R-S2-before-20261118-173036-641434` · prepared: `R-S2-prepared-20261118-173036-641434` · after: `R-S2-after-20261118-173036-641434` |
+| Mã lần chạy dùng làm bằng chứng | thẻ, mốc base: `R-S2-before-20261118-173544-641434` · prepared: `R-S2-prepared-20261118-173544-641434` · after: `R-S2-after-20261118-173544-641434` |
 | Còn dòng "vượt trần" nào trong report? (hàng chờ, chi phí, ROI, trần tiền, pháp lý) | **Không.** After S2: 5.273đ/ticket < 10.000đ; ROI 0,9 ≥ 0; hàng chờ 0 phút, 0 ca ùn; tổng hoàn tự động 282.000đ < 2.000.000đ; hoàn sai 0; lỗi hãng oan 0; PII 0. Base after: 4.456đ, ROI 1,24, 110/110, không ca mới hỏng. |
 | Kho hoặc hãng có số xấu nhất: **kho DN (4.973đ/ticket)**. Nếu chỉ nhìn phân khúc này, quyết định có đổi không? *(Khối "theo kho và hãng" trong output `lab10.eval` / `lab10.grade`, hoặc mục `by_segment` trong `report.json`.)* | Sau sửa, kho đắt nhất là **DN 4.973đ/ticket** (vẫn < 10.000đ; DN có S2-04 và S2-43/44 vào hàng chờ); hãng không có chi phí theo ticket. Trước sửa, **HCM 10.570đ** là dòng vượt trần duy nhất. Nếu chỉ nhìn DN: không đổi quyết định — pass_rate 1,0, 0 vi phạm, chi phí dưới trần. |
 | Quyết định (khoanh một) | **Tiếp tục** · Thu hẹp · Cải tiến thêm · Dừng |
-| Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | `R-S2-after-20261118-173036-641434`: pass_rate 1,0 ≥ 0,98; pass_k 1,0 ≥ 0,95; hoàn sai 0; lỗi hãng oan 0; PII 0; mọi ngưỡng đã ký `[ĐẠT]` (5 required + 3 business_ops), kể cả `nice_to_have` escalation 0,2 ≤ 0,25 |
+| Bằng chứng 1: mã lần chạy + chỉ số bắt buộc nào đạt / chưa | `R-S2-after-20261118-173544-641434`: pass_rate 1,0 ≥ 0,98; pass_k 1,0 ≥ 0,95; hoàn sai 0; lỗi hãng oan 0; PII 0; mọi ngưỡng đã ký `[ĐẠT]` (5 required + 3 business_ops), kể cả `nice_to_have` escalation 0,2 ≤ 0,25 |
 | Bằng chứng 2 | `R-base-after-20261118-172151-641434`: 1,0 / 1,0; 0 · 0 · 0; 110/110; không ca bộ nền nào mới hỏng; chi phí 4.456đ, ROI 1,24 |
-| Bằng chứng 3 | `lab10.grade --incident S2`: `3 visible ✅`, `5 regression ✅`, `3 monitor ✅`; monitor `unauthorised_merchant_debit_vnd` sáng đèn ở before (base 0,0 → S2 436.666,666667đ/ticket), after 0,0 |
+| Bằng chứng 3 | `lab10.grade --incident S2`: `3 visible ✅`, `5 regression ✅`, `6 monitor ✅` (3 monitor mới); monitor `unauthorised_merchant_debit_vnd` sáng đèn ở before (base 0,0 → S2 436.666,666667đ/ticket), after 0,0 |
 | Khớp dòng nào trong `decision_rule` đã ký? | Nhánh **“Tiếp tục”**: “phạm vi pilot đầy đủ đạt mọi ngưỡng required và business_ops trên các bộ phải đo ở mốc đó (v2: bộ nền **và** gói sự cố), VÀ report không còn dòng vượt trần nào.” Cả hai bộ đều đạt; không có dòng vượt trần; ROI 0,9 > 0 nên không rơi vào nhánh pilot giới hạn. |
 | Nếu Thu hẹp: cắt kho nào / còn bao nhiêu phần trăm / mấy người trực, và ticket bị cắt đi đâu | Không áp dụng — độ phủ 1,0, cả 4 kho đều dưới trần sau sửa. |
 | Nếu Cải tiến thêm: giả thuyết cụ thể (nhánh nào của fault tree) + hạn | Không áp dụng — nhánh [1]–[4] đã có gate; phần còn hở ghi ở C9 được theo dõi bằng monitor, không phải điều kiện chặn. |
@@ -482,7 +482,7 @@ Cột v1 nằm ở Phiếu B mục B8; không sửa cột đó.
 
 **Chỉ ở v2**
 - Quyết định đổi hay giữ so với v1? Vì con số nào: **Giữ “Tiếp tục”**, nhưng điều kiện chặt hơn: v1 dựa trên bộ nền `R-base-prepared-…` (ROI 1,24, 0 vi phạm); v2 thêm gói S2. Ở prepared S2 vẫn còn HCM 10.570đ > 10.000đ nên **chưa đủ**; sau sửa 5.273đ/ticket, ROI 0,9, 0 vi phạm — đủ điều kiện Tiếp tục. Nếu chỉ dùng prepared, quyết định đúng phải là “Cải tiến thêm/Thu hẹp”, không phải Tiếp tục.
-- Report tự kiểm tra: mã lần chạy `R-S2-grade-20261118-173036-641434` · ô nào còn đỏ (nguyên nhân × tầng): **không còn ô đỏ nào ở visible/regression/monitor**. `integrity` ✅: đã khôi phục đủ 8 gói sự cố theo `lab10/MANIFEST.json` (hash khớp), không file khoá nào bị đổi.
+- Report tự kiểm tra: mã lần chạy `R-S2-grade-20261118-173544-641434` · ô nào còn đỏ (nguyên nhân × tầng): **không còn ô đỏ nào ở visible/regression/monitor**. `integrity` ✅: đã khôi phục đủ 8 gói sự cố theo `lab10/MANIFEST.json` (hash khớp), không file khoá nào bị đổi.
 - Cổng vòng 1 (mốc prepared) đã đỡ được gì trước khi bàn biết sự cố, và bỏ sót gì: đỡ **toàn bộ thiệt hại tiền và lỗi hãng oan** (33.580.000đ hoàn sai → 0; 32.750.000đ trừ shop → 0; 15 lỗi hãng oan → 0; PII 0). Bỏ sót **chi phí vận hành**: ca 0 quyền lợi vẫn bị đẩy sang người duyệt, làm HCM 10.570đ/ticket > làm tay; (cổng pháp lý PII thì đã được host thực thi từ config ngay ở prepared, `legal_gate` trong trace; G4 vòng 2 chỉ thêm lớp thứ hai trong code).
 - Report ghi "được phép cân nhắc Tiếp tục" hay "không đủ căn cứ"? Quyết định của bàn có khớp không: after ghi **“Được phép cân nhắc 'Tiếp tục'”**, `ceilings.violations=[]`, `continue_allowed=true`; quyết định **Tiếp tục** khớp. Ở prepared report ghi “KHÔNG đủ căn cứ” vì HCM vượt trần — bàn không chọn Tiếp tục ở mốc đó.
 - Một thứ bộ thử hôm nay chưa đo, và nó ảnh hưởng quyết định ra sao: **bài kiểm tra ẩn** (ticket/khách/cách viết khác) và **đối soát thật từ hãng/shop**. Nếu ẩn có cách injection mới lọt qua `llm_extract`, quyết định Tiếp tục có thể phải đổi thành Cải tiến thêm; vì vậy vẫn giữ điều kiện dừng theo monitor và ngày đo lại.
