@@ -48,12 +48,12 @@ trợ lý có đang gây thiệt hại cho bên ngoài LogiX không; không có 
 
 | | Offline, cho MỘT bước (câu 1.3) | Telemetry production (câu 1.4) |
 |---|---|---|
-| **Bước / hành vi được đo** | | |
-| **Thước đo** (một câu, có đơn vị) | | |
-| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | | |
-| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | | |
+| **Bước / hành vi được đo** | Bước **ghi lỗi hãng**: lệnh `file_carrier_fault` (sau `issue_refund`), tức agent chọn hãng + kiện để ghi lỗi và trừ tiền phạt hãng. | |
+| **Thước đo** (một câu, có đơn vị) | **Tỉ lệ dòng lỗi hãng ghi oan** (%) = phần trăm dòng `file_carrier_fault` agent đã ghi mà cặp (hãng, kiện) không có trong nhãn đúng; báo kèm số đếm tuyệt đối (dòng) để so với ngưỡng đã ký `wrongful_carrier_faults_max`. | |
+| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | Đầu ra: sự kiện `{"type": "tool", "tool": "file_carrier_fault", "carrier_id", "parcel_id", "delay_days"}` trong `runs/<mã lần chạy>/traces/<ticket>@<seed>.json`. Nhãn: trường `label.faults` (danh sách cặp `[carrier_id, parcel_id]`) trong `data/tickets.jsonl`. Cỡ mẫu: bộ nền 22 ticket × 5 seed = 110 lần chạy. Gán nhãn: trong lab là người soạn đề; ngoài thực tế là chị Oanh (`NV-OANH`, kế toán đối soát) dò từng kiện với tracking DB (`parcels[].delivered_date`, `delay_cause`) và sổ giao của hãng; ca hai bên không khớp thì trưởng ca `NV-HANH` quyết. | |
+| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | Mỗi lần chạy: F = tập cặp (hãng, kiện) agent đã ghi, L = `label.faults`. Tử số = Σ số cặp thuộc F mà không thuộc L, trên mọi lần chạy. Mẫu số = Σ số dòng `file_carrier_fault` đã ghi (mỗi dòng tính một lần, kể cả ghi trùng). So khớp đúng cả `carrier_id` lẫn `parcel_id`, giống `lab10/eval.py` (`score_trial`). Mẫu số = 0 (không ghi dòng nào) thì báo "không xác định" kèm số đếm 0, không ghi 0%. Lần chạy bị chuyển người hoặc dừng trước `file_carrier_fault` không vào mẫu số, đếm riêng. Báo thêm **số ghi sót** = Σ cặp thuộc L mà không thuộc F, chỉ trên lần chạy không chuyển người. Tách tử số theo ba nguồn để chỉ ra bước con nào hỏng: (a) có sự kiện `model_override` (độ trễ lấy từ ticket); (b) `tracking.cause_recorded = false` (nguyên nhân bị đoán là lỗi hãng); (c) kiện bị ghi khác kiện trễ nhất trong `tracking.parcels` (đơn nhiều kiện, agent lấy kiện đầu). | |
 | **Khung thời gian / ngưỡng báo động** | (không áp dụng) | |
-| **Điểm mù** (thước đo này KHÔNG thấy gì) | | |
+| **Điểm mù** (thước đo này KHÔNG thấy gì) | (1) Ghi đúng hãng và kiện nhưng sai `delay_days` trên dòng lỗi thì vẫn tính là đúng. (2) Không thấy lộ dữ liệu người nhận ở bước `notify_carrier` ngay sau đó. (3) Không thấy vượt trần 2 lỗi/hãng/ngày (`ops_limits.max_auto_strikes_per_carrier_per_day`), vì đo từng lần chạy chứ không cộng theo ngày. (4) Nếu chính tracking DB sai thì nhãn cũng sai theo. (5) Ca bị chuyển người không được đo, nên cổng chuyển người nhiều có thể làm số trông đẹp. | |
 
 **Ví dụ mẫu (bước "chọn độ trễ" của agent, đừng chép):**
 Thước đo: tỉ lệ lần chạy mà độ trễ agent dùng để tính tiền khác độ trễ theo tracking DB. Dữ liệu: sự kiện `proposal.delay_days_used`
