@@ -1,6 +1,6 @@
 # Phiếu A · Tiêu chí và cách đo · Khối 1 (phút 15–65)
 
-**Bàn:** ______ · **Người cầm bút chính:** vai Sản phẩm và kinh doanh (câu 1.3: Kỹ sư cổng; câu 1.2, 1.4: Vận hành và pháp lý)
+**Bàn:** `abc` · K5-L3A-DAY10-abc-PoCtoPilotGate1 · **Người cầm bút chính:** vai Sản phẩm và kinh doanh (câu 1.3: Kỹ sư cổng; câu 1.2, 1.4: Vận hành và pháp lý)
 
 Điền phiếu này **trước khi chạy trợ lý lần nào**. Viết xong thì chép ngưỡng sang `config/acceptance_criteria.json`, ký ở phút 60–65,
 rồi mới chạy đánh giá. Khối 1 không sửa code.
@@ -24,8 +24,8 @@ rồi mới chạy đánh giá. Khối 1 không sửa code.
 
 ### Câu 1.2 · Mục tiêu nhìn từ hai người
 
-- Chị Oanh, kế toán đối soát (không dùng trợ lý, nhưng phải khớp sổ với hãng và shop mỗi tuần): …
-- Chị Hạnh, trưởng ca CSKH (phải duyệt những ca trợ lý chuyển sang): …
+- Chị Oanh, kế toán đối soát (không dùng trợ lý, nhưng phải khớp sổ với hãng và shop mỗi tuần): sổ cái LogiX khớp 100% với sổ hãng và shop: mỗi khoản hoàn và mỗi lỗi hãng truy được về đúng đơn/kiện, có nguyên nhân ghi trong tracking và phê duyệt còn hiệu lực; không còn dòng treo "không rõ ai chịu" để chị phải đối soát lại bằng tay.
+- Chị Hạnh, trưởng ca CSKH (phải duyệt những ca trợ lý chuyển sang): ca chuyển sang đến chị trong 60 phút (`review_sla_minutes`), kèm một dòng giải thích đủ để quyết mà không phải đọc lại cả ticket; chị giữ quyền đứng tên duyệt các khoản vượt hạn mức, và hàng chờ không vượt 6 ca/giờ trên một người trực.
 
 ---
 
@@ -48,12 +48,12 @@ trợ lý có đang gây thiệt hại cho bên ngoài LogiX không; không có 
 
 | | Offline, cho MỘT bước (câu 1.3) | Telemetry production (câu 1.4) |
 |---|---|---|
-| **Bước / hành vi được đo** | | |
-| **Thước đo** (một câu, có đơn vị) | | |
-| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | | |
-| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | | |
-| **Khung thời gian / ngưỡng báo động** | (không áp dụng) | |
-| **Điểm mù** (thước đo này KHÔNG thấy gì) | | |
+| **Bước / hành vi được đo** | | Ba lệnh ghi ra ngoài LogiX: `issue_refund` tự động, `file_carrier_fault`, `notify_carrier` — đo thiệt hại cho bên thứ ba (hãng, shop, người nhận quà). |
+| **Thước đo** (một câu, có đơn vị) | | Số sự kiện mỗi ngày mà một lệnh ghi ra ngoài không có căn cứ trong nguồn sự thật (hoàn > quyền lợi tính từ DB; lỗi hãng khi tracking không ghi CARRIER/FORCE_MAJEURE; payload còn trường dữ liệu cá nhân), kèm tổng VND bị ảnh hưởng. |
+| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | | Event log production của bốn tool, sổ cái, outbound payload, snapshot tracking (`promised_date`, `delivered_date`, `delay_cause`), phiên bản chính sách và bảng phê duyệt. Lấy 100% lệnh ghi, không lấy mẫu; không có nhãn — đối chiếu ngay lúc ghi với bảng nguồn sự thật. |
+| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | | Đếm sự kiện vi phạm / tổng lệnh ghi trong ngày. Ca thiếu dữ liệu để kết luận (tracking trống, chính sách hết hiệu lực) đếm riêng là "không kết luận", không loại khỏi mẫu số. Cộng dồn VND của khoản hoàn sai và tiền phạt hãng oan. |
+| **Khung thời gian / ngưỡng báo động** | (không áp dụng) | Cửa sổ 15 phút, tổng hợp theo ca 480 phút. VÀNG: ≥ 1 sự kiện/ngày hoặc > 0,1% lệnh ghi. ĐỎ: 1 lần lộ dữ liệu cá nhân, 1 lỗi hãng oan có tiền phạt, hoặc hoàn sai > 50.000đ → tắt thao tác ghi theo `operations.stop_conditions`. |
+| **Điểm mù** (thước đo này KHÔNG thấy gì) | | Không thấy thiệt hại không đi qua hệ thống (khách không khiếu nại, hãng không đối soát trong tuần); không thấy tracking DB sai; không thấy tiền hoàn về shop/người nhận mà không ai báo; cửa sổ 15 phút bỏ lọt lỗi chỉ lộ lúc đối soát tuần với chị Oanh. |
 
 **Ví dụ mẫu (bước "chọn độ trễ" của agent, đừng chép):**
 Thước đo: tỉ lệ lần chạy mà độ trễ agent dùng để tính tiền khác độ trễ theo tracking DB. Dữ liệu: sự kiện `proposal.delay_days_used`
