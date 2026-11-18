@@ -46,7 +46,7 @@ Trưởng nhóm kiêm Kỹ sư cổng: đọc trace, viết và sửa cổng, th
 - Điều phối review độc lập với Codex sau mỗi mốc CP1–CP5 và sửa theo các kết luận "duyệt có điều kiện".
 
 Sử dụng AI:
-- **Claude Code**: đọc và tóm tắt tài liệu lab; cài `upstream`, danh tính Git, sửa CRLF; soạn câu 1.3; đọc `lab10/agent.py`, viết cổng và monitor; chạy các lệnh đo; soạn nội dung phần Kỹ sư cổng ở Phiếu B, C; gộp phần của Long, Nam lên main.
+- **Claude Code**: đọc và tóm tắt tài liệu lab; cài `upstream`, danh tính Git, sửa CRLF; soạn câu 1.3; đọc `lab10/agent.py`, viết cổng và monitor; chạy các lệnh đo; soạn nội dung phần Kỹ sư cổng ở Phiếu B, C; gộp phần của Long, Nam lên main; soạn nháp mục cá nhân này (kể cả exit ticket) từ quá trình làm, Bảo đọc lại và xác nhận trước khi nộp.
 - **Codex**: điền thông tin nhóm ban đầu trong `TEAM.md`; reviewer độc lập (chỉ đọc) sau mỗi mốc, đối chiếu `RUBRIC.md`, `RULES.md`.
 - Ngưỡng, con số trong config và quyết định v1/v2 do bàn tự chọn và thống nhất (RULES.md).
 
