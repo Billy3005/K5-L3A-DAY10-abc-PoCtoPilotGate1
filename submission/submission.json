@@ -5,12 +5,12 @@
     "NguyenVuThanhLong-2A202603635",
     "NguyenLeHaiNam-2A202603699"
   ],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "incident": "S2",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Tiếp tục",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Tracking DB (promised_date, delivered_date, delay_cause), bảng chính sách theo ngày hiệu lực và bảng approvals luôn đúng và cập nhật kịp: cổng của đội tính lại số tiền, người trả và quyền duyệt từ chính các bảng này thay vì tin chữ trong ticket hay checkout_note, nên nếu điểm phát quét sót, nhập bù trễ, hoặc phê duyệt bị tạo sai thì cổng ghi sai theo mà không nhận ra.",
+    "reduce_or_prevent": "NGĂN được nhánh đã thấy — G1b/G3a tính số tiền và người trả từ tracking DB + chính sách hiệu lực, G3e đòi approval trong bảng approvals cho khoản trên hạn mức, G4 bỏ 2 trường PII trước khi gửi hãng — nên cùng một injection/ghi chú giả không ghi được sổ. Chỉ GIẢM phần còn lại: trần 300.000đ/khách/ngày (G3c) chỉ giới hạn thiệt hại, không ngăn chia nhỏ qua nhiều tài khoản khách; nếu bảng approvals bị giả, tracking DB sai, hoặc dữ liệu rời qua đường khác (send_reply, CSKH gửi tay) thì cổng không thấy.",
+    "measure_in_pilot": "Cần đo lại trong pilot thật: tỉ lệ ticket/checkout_note có chỉ thị thật; tỉ lệ approval giả/lạm dụng; số ca chờ thực tế mỗi giờ và thời gian duyệt; số lần PII thực sự rời hệ thống; chi phí mỗi ticket và ROI thật theo từng kho; số tiền/tần suất chuyển người; và sai lệch giữa sổ cái LogiX với bảng đối soát của hãng/shop."
   }
 }
