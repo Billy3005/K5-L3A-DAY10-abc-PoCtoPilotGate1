@@ -1,5 +1,5 @@
 {
- "collected_at": "2026-11-18T17:16:23",
+ "collected_at": "2026-11-18T17:17:14",
  "incident": "S2",
  "run_ids": {
   "base": "R-S2-before-20261118-171517-3c261f",
@@ -22,7 +22,7 @@
   "config/switches.json": "7f6b75433f65640f6610a7930ecefae27fc8b1891634803815ef48d9c4a0b457",
   "docs/form-a-criteria.md": "676d8c55142cc438203419609936fc68e12c578c41f9ce8729488c29616059fb",
   "docs/form-b-evaluation-gates.md": "0027cf203113910116ea3a2102df84499e57dc8bb8cfddeb1fb5314fd7b43e2b",
-  "docs/form-c-incident.md": "eeedff262f5d80b36eeacb39b4cc1cc93218d0e490ea77327d7599c61fc22f5c",
+  "docs/form-c-incident.md": "540130fbd98d8f7ab0b5589f95b86f283abac019db2b1f3d4b2db2a0750582b0",
   "runs/R-S2-after-20261118-171517-3c261f/report.json": "3407f71d0af039a4da323ed7919e0d4b990f96b5c9b76b97710798d47297e416",
   "runs/R-S2-before-20261118-171517-3c261f/report.json": "5ee538869309b989af19c684d6e1f188a0e010c66df5dc9db3b1b357f3b7cadd",
   "runs/R-S2-prepared-20261118-171517-3c261f/report.json": "74ee796b6b48678b73a3bb51c7c00e411411360c8e418f3357e92089d1156014",
