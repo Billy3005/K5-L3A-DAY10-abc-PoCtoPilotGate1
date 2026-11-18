@@ -2,9 +2,9 @@
 
 ## Thông tin nhóm
 
-- Tên nhóm (`TenNhom`, không dấu, không khoảng trắng):
-- Lớp: `L3A` / `L3B`
-- Repo của bàn: `K5-<L3A|L3B>-DAY10-<TenNhom>-PoCtoPilotGate1`
+- Tên nhóm (`TenNhom`, không dấu, không khoảng trắng): `abc`
+- Lớp: `L3A`
+- Repo của bàn: [K5-L3A-DAY10-abc-PoCtoPilotGate1](https://github.com/Billy3005/K5-L3A-DAY10-abc-PoCtoPilotGate1)
 - Thẻ sự cố đã bốc (S1–S8):
 
 ## Thành viên
@@ -13,10 +13,10 @@ Họ tên đầy đủ và MSSV của **mọi** thành viên; thêm dòng nếu 
 
 | STT | Họ và tên | MSSV | Vai | Trưởng nhóm |
 | --: | --------- | ---- | --- | :---------: |
-|   1 |           |      |     |             |
-|   2 |           |      |     |             |
-|   3 |           |      |     |             |
-|   4 |           |      |     |             |
+|   1 | Nguyễn Gia Bảo | 2A202603647 | Kỹ sư cổng | Có |
+|   2 | Nguyễn Vũ Thành Long | 2A202603635 | Sản phẩm và kinh doanh | |
+|   3 | Nguyễn Lê Hải Nam | 2A202603699 | Vận hành và pháp lý | |
+
 
 Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, khớp bảng trên.
 
@@ -24,20 +24,29 @@ Ghi `members` trong `submission/submission.json` theo dạng `"HoVaTen-MSSV"`, k
 
 Mỗi thành viên tự viết một mục bên dưới (chép mẫu, đổi tiêu đề thành họ tên không dấu và MSSV, ví dụ `## NguyenVanAn-20241234`).
 
-## HoVaTen-MSSV
+## NguyenLeHaiNam-2A202603699
 
 ### Phần việc phụ trách
 
-Vai trong bàn; câu nào của đề, mục nào của phiếu A/B/C, file nào (`lab10/guards.py`, `config/operating_gates.json`, …).
+Vai **Vận hành và pháp lý**. Câu 1.2 và 1.4 (Phiếu A mục A1–A2); câu 2.4 HAZOP vòng 1 và checklist 9 nhóm việc (Phiếu B mục B4–B5); câu 2.10 cổng người/vận hành/pháp lý, runbook 1–3 và giờ cao điểm (Phiếu B mục B7.5–B7.6); mục `operations` và `legal` trong `config/operating_gates.json`; `submission/submission.json`; gom bài nộp. Vòng 2 (khi có thẻ): mục C3 phần riêng theo thẻ, C11 checklist và runbook 4–5, ba dòng bắt buộc ở C12.
 
 ### Đóng góp cụ thể
 
-...
+- Viết mục tiêu nhìn từ chị Oanh (sổ cái khớp 100% với hãng/shop, mọi khoản truy được về đơn/kiện, có nguyên nhân tracking và phê duyệt còn hiệu lực) và chị Hạnh (ca chuyển sang trong 60 phút, có ghi chú giải thích, hàng chờ không vượt 6 ca/giờ, chị giữ quyền đứng tên duyệt).
+- Thiết kế telemetry production 3 ô cho ba lệnh ghi ra ngoài (hoàn tiền, ghi lỗi hãng, báo hãng), kèm cửa sổ 15 phút, ngưỡng vàng/đỏ và điểm mù.
+- HAZOP `issue_refund`: 5 dòng kỹ thuật (WRONG số ngày khách khai; INVALID phê duyệt A-0031 hết hạn; INCOMPLETE kiện trễ; PERTURBED `payer=MERCHANT` do ghi chú đặt hàng; INCAPABLE `fail_open` khi LLM 429) và 4 dòng ngoài kỹ thuật (người duyệt, ngân sách, dữ liệu gửi bên thứ ba, phạm vi pilot).
+- Đặt cổng `operations`: PIC `NV-TUNG`, người duyệt `NV-HANH`, 1 người trực, 6 ca/giờ, chờ tối đa 60 phút, 5 điều kiện dừng, kiểm mẫu 10%, bật ghi chú giải thích; cổng `legal`: chặn 2 trường dữ liệu cá nhân gửi hãng, chỉ ghi lỗi hãng khi tracking có nguyên nhân.
+- Viết runbook 1–3 và mục giờ cao điểm; điền checklist 9 nhóm việc với PIC có tên từng dòng; điền `submission/submission.json`.
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy (`runs/<mã>`), dòng trong phiếu.
+- `config/operating_gates.json` → `operations`, `legal`.
+- `templates/form-a-criteria.md` → A1 (câu 1.2), A2 cột telemetry (câu 1.4).
+- `templates/form-b-evaluation-gates.md` → B4, B5, B7.5, B7.6.
+- `submission/submission.json`.
+- Chưa có mã commit/mã lần chạy cho phần này: Bản tiêu chí chưa được ký nên `lab10.eval` chưa chạy; mã lần chạy sẽ bổ sung khi Bạn 1/Bạn 2 chạy mốc base.
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+Một điều học được: cổng phải so với nguồn sự thật (tracking, bảng phê duyệt), không so với lời khách; cổng pháp lý bảo vệ người nhận quà — người không có kênh nào để đồng ý. Một điều còn chưa chắc: 1 người trực có đủ cho 14 ca/giờ của ngày sale không; cần số thật từ pilot mới biết có phải xếp 2 người cố định.
+

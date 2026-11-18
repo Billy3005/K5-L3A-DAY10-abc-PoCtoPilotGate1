@@ -1,6 +1,10 @@
 {
-  "team": "",
-  "members": [],
+  "team": "K5-L3A-DAY10-abc-PoCtoPilotGate1",
+  "members": [
+    "NguyenGiaBao-2A202603647",
+    "NguyenVuThanhLong-2A202603635",
+    "NguyenLeHaiNam-2A202603699"
+  ],
   "incident": "",
   "decision_v1": "",
   "decision_v2": "",
