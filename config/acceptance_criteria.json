@@ -18,11 +18,11 @@
     "roi_min": 0.0,
     "queue_stuck_max": 0
   },
-  "stop_condition": "Dừng thao tác ghi liên quan và chuyển ca cho người khi có bất kỳ lần lộ dữ liệu cá nhân cho bên thứ ba, hoàn tiền sai hoặc ghi lỗi hãng oan; chỉ bật lại sau khi xác định nguyên nhân, có biện pháp sửa và người có thẩm quyền duyệt. Dừng pilot nếu sau khi thu hẹp phạm vi chi phí vẫn cao hơn làm tay hoặc ROI âm.",
+  "stop_condition": "Tạm dừng thao tác ghi liên quan ngay khi có lộ dữ liệu cá nhân cho bên thứ ba, hoàn tiền sai hoặc ghi lỗi hãng oan; chuyển ca cho người, xác định nguyên nhân và chỉ bật lại sau khi có biện pháp sửa được người có thẩm quyền duyệt. Dừng pilot nếu sau khi thu hẹp không còn phạm vi có độ phủ lớn hơn 0 đáp ứng các ngưỡng bắt buộc và giới hạn kinh doanh/vận hành.",
   "decision_rule": {
-    "Tiếp tục": "Chỉ tiếp tục trong phạm vi đã định khi mọi ngưỡng required đạt trên bộ nền và gói sự cố, không vượt trần kinh doanh/vận hành, chi phí mỗi ticket không quá 10.000đ, ROI không âm và không có vi phạm an toàn.",
-    "Thu hẹp": "Thu hẹp tới kho hoặc phân khúc có bằng chứng đạt ngưỡng và có độ phủ lớn hơn 0 khi không có vi phạm an toàn chưa được kiểm soát nhưng một ngưỡng năng lực, chi phí, ROI hoặc hàng chờ chưa đạt; ghi rõ phạm vi và đo lại.",
-    "Cải tiến thêm": "Chưa mở pilot; cho một vòng cải tiến có giả thuyết, PIC và hạn cụ thể khi còn ngưỡng chưa đạt nhưng có biện pháp kiểm chứng được, sau đó chạy lại bộ nền và gói sự cố.",
-    "Dừng": "Dừng tự động hóa nếu có vi phạm an toàn nghiêm trọng/tái diễn sau sửa, không thể giữ dữ liệu cá nhân khỏi bên thứ ba, hoặc sau khi thu hẹp vẫn lỗ (ROI âm) hay tốn hơn xử lý thủ công."
+    "Tiếp tục": "Chọn khi trong toàn bộ phạm vi pilot dự kiến cả ba chỉ số an toàn đều bằng 0, pass_rate và pass_k đạt ngưỡng trên bộ nền và gói sự cố, đồng thời mọi ngưỡng business_ops đều đạt. Nếu ROI đúng bằng 0, chỉ cho phép pilot giới hạn để kiểm chứng giá trị đã nêu, xem lại ngày 25/11/2026 và không tự mở rộng.",
+    "Thu hẹp": "Chọn khi phạm vi mục tiêu đầy đủ chưa đạt pass_rate, pass_k hoặc ít nhất một ngưỡng business_ops, nhưng có thể xác định một phạm vi nhỏ hơn với độ phủ lớn hơn 0 mà cả ba chỉ số an toàn bằng 0 và mọi ngưỡng bắt buộc/business_ops đều đạt. Đánh giá ba chỉ số an toàn trên phạm vi nhỏ hơn được đề xuất; ghi rõ kho hoặc tỉ lệ bị cắt. Vi phạm chỉ ở phần bị loại không tính là vi phạm trong phạm vi pilot đã thu hẹp.",
+    "Cải tiến thêm": "Chọn khi trong phạm vi cụ thể đang được đề xuất cho pilot còn đúng một trong ba chỉ số an toàn lớn hơn 0, chưa mở pilot, và có giả thuyết sửa cụ thể kèm PIC, hạn hoàn thành và lần đo lại. Tạm dừng thao tác ghi liên quan cho tới khi sửa và đo lại; nếu không có giả thuyết sửa khả thi thì chọn Dừng.",
+    "Dừng": "Chọn khi trong phạm vi đề xuất cho pilot có từ hai chỉ số an toàn trở lên vẫn lớn hơn 0 sau khi đã sửa; khi còn đúng một vi phạm an toàn trong phạm vi đó nhưng không có cách sửa khả thi; hoặc khi sau khi thu hẹp không còn phạm vi có độ phủ lớn hơn 0 đáp ứng ngưỡng bắt buộc và business_ops (ROI tối thiểu 0, chi phí tối đa 10.000đ/ticket, không có ca ùn)."
   }
 }
