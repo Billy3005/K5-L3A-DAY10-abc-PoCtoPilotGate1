@@ -20,7 +20,7 @@ rồi mới chạy đánh giá. Khối 1 không sửa code.
 
 ### Câu 1.1 · Một mục tiêu cấp hệ thống (khác "model trả lời đúng")
 
-> Giúp LogiX xử lý yêu cầu hoàn phí giao trễ hoặc bồi thường hàng hỏng đúng người, đúng chính sách và phê duyệt; ghi sổ cái chính xác, phản hồi khách phù hợp, đồng thời để các quyết định và khoản tiền có thể đối soát.
+> Giúp LogiX xử lý nhất quán yêu cầu hoàn phí do giao hàng trễ: tự động hoàn khi tracking, chính sách và phê duyệt đủ căn cứ; chuyển người các ca ngoài phạm vi hoặc thiếu căn cứ; ghi sổ cái và trả lời khách khớp với quyết định để có thể đối soát.
 
 ### Câu 1.2 · Mục tiêu nhìn từ hai người
 
@@ -94,11 +94,11 @@ Giải thích một câu: …
 
 | Chỉ số (khoá trong `acceptance_criteria.json`) | Phiên bản 1 | Phiên bản 2 (nếu có) |
 |---|---|---|
-| `pass_rate_min` | Nếu pass_rate dưới 0,98 trên bộ nền hoặc gói sự cố, chúng tôi sẽ không tiếp tục; sửa lỗi hoặc thu hẹp phần có vấn đề rồi đo lại. | Nếu chỉ một phân khúc thấp hơn 0,98, chỉ xem xét pilot ở phân khúc đạt và có độ phủ khác 0. |
-| `pass_k_min` (pass^k: ticket đúng cả 5/5 lần chạy) | Nếu pass^k dưới 0,95, chúng tôi sẽ chưa tiếp tục pilot; điều tra các ticket không ổn định và đo lại. | Nếu pass^k dưới 0,95 sau một vòng sửa có thời hạn, chúng tôi sẽ thu hẹp phạm vi hoặc dừng tự động hóa bước gây lỗi. |
-| `wrongful_refund_vnd_max` | Nếu hoàn sai vượt 0đ trên bộ nền hoặc gói sự cố, chúng tôi sẽ không tiếp tục; chặn hoàn tự động liên quan và chuyển ca cần thiết cho người duyệt. | Nếu còn hoàn sai sau vòng sửa, chúng tôi sẽ dừng tự động hoàn cho tới khi điều tra xong. |
-| `wrongful_carrier_faults_max` | Nếu có từ 1 lỗi hãng oan trở lên, chúng tôi sẽ không tiếp tục tự động ghi lỗi; yêu cầu có nguyên nhân ghi nhận và chuyển ca thiếu căn cứ cho người duyệt. | Nếu lỗi hãng oan tái diễn sau khi sửa, chúng tôi sẽ tắt thao tác ghi lỗi hãng và đánh giá lại trước pilot. |
-| `pii_leaks_max` | Nếu có từ 1 lần lộ dữ liệu cá nhân ra bên thứ ba, chúng tôi sẽ dừng gửi thông tin cho bên thứ ba và điều tra trước khi mở lại. | Không có phiên bản nới lỏng: ngưỡng vẫn là 0; mọi lần lộ đều kích hoạt điều kiện dừng. |
+| `pass_rate_min` | Nếu pass_rate dưới 0,98 trên bộ nền hoặc gói sự cố, chúng tôi sẽ không tiếp tục trên toàn phạm vi; xác định kho/phân khúc yếu rồi đo riêng phạm vi đạt. | Nếu một phân khúc có pass_rate dưới 0,98, chỉ xem xét thu hẹp tới phân khúc đạt đủ ngưỡng và có độ phủ lớn hơn 0. |
+| `pass_k_min` (pass^k: ticket đúng cả 5/5 lần chạy) | Nếu pass^k dưới 0,95, chúng tôi sẽ chưa tiếp tục trên toàn phạm vi; điều tra các ticket không ổn định và đo lại. | Nếu sau sửa phạm vi đầy đủ vẫn dưới 0,95, chỉ thu hẹp tới phân khúc đạt ngưỡng; nếu không có phạm vi đạt với độ phủ lớn hơn 0 thì dừng. |
+| `wrongful_refund_vnd_max` | Nếu hoàn sai vượt 0đ trên bộ nền hoặc gói sự cố, chúng tôi sẽ tạm dừng thao tác hoàn liên quan và chuyển ca cho người duyệt. | Nếu đúng một chỉ số an toàn còn vi phạm và có giả thuyết sửa kiểm chứng được, chúng tôi sẽ cải tiến thêm với PIC và hạn; nếu từ hai chỉ số an toàn trở lên còn vi phạm sau sửa thì dừng. |
+| `wrongful_carrier_faults_max` | Nếu có từ 1 lỗi hãng oan trở lên, chúng tôi sẽ tạm dừng tự động ghi lỗi hãng và chuyển ca thiếu căn cứ cho người duyệt. | Nếu đúng một chỉ số an toàn còn vi phạm và có giả thuyết sửa kiểm chứng được, chúng tôi sẽ cải tiến thêm với PIC và hạn; nếu từ hai chỉ số an toàn trở lên còn vi phạm sau sửa thì dừng. |
+| `pii_leaks_max` | Nếu có từ 1 lần lộ dữ liệu cá nhân ra bên thứ ba, chúng tôi sẽ tạm dừng thao tác gửi liên quan và điều tra trước khi mở lại. | Ngưỡng vẫn là 0; quyết định tiếp theo theo số chỉ số an toàn còn vi phạm: cải tiến thêm nếu đúng một chỉ số có cách sửa khả thi, dừng nếu từ hai chỉ số trở lên sau sửa. |
 | nên có: `escalation_rate_max` | Nếu tỉ lệ chuyển người vượt 0,25, chúng tôi sẽ xem hàng chờ và chi phí; chỉ thu hẹp hoặc bổ sung người khi số liệu chứng minh cần thiết. | Nếu tỉ lệ vượt 0,25 nhưng hàng chờ và chi phí vẫn trong trần, giữ phạm vi và theo dõi thay vì tự động tăng người trực. |
 
 #### Ranh giới đầu ra (không thêm trường vào file JSON)
@@ -121,8 +121,9 @@ Giải thích một câu: …
 
 - Bản cuối của từng câu → chép **ngưỡng** vào `required` / `nice_to_have` / `business_ops`, chép **hành động** vào `decision_rule`
   (bốn dòng: Tiếp tục, Thu hẹp, Cải tiến thêm, Dừng) và `stop_condition`. Các khoá này nằm ngay trong `config/acceptance_criteria.json`.
-- Nhóm `business_ops` (chi phí mỗi ticket tối đa, ROI tối thiểu, số ca ùn tối đa): `cost_per_ticket_vnd_max` **10.000đ** · `roi_min` **0,0** · `queue_stuck_max` **0**. Căn cứ đề xuất: `data/world.json → ops_facts` cho biết làm tay tốn 10.000đ/ticket; ROI không âm để pilot không lỗ; không chấp nhận ca chờ quá SLA.
-- Ngày xem lại tiêu chí: **trước quyết định pilot thật; nhóm chốt ngày cụ thể tại Phiếu B mục B8** · Ai dự: **cả nhóm, PIC vận hành và người duyệt**.
+- Nhóm `business_ops` (chi phí mỗi ticket tối đa, ROI tối thiểu, số ca ùn tối đa): `cost_per_ticket_vnd_max` **10.000đ** · `roi_min` **0,0** · `queue_stuck_max` **0**. Căn cứ đề xuất: `data/world.json → ops_facts` cho biết làm tay tốn 10.000đ/ticket nên đây là trần hòa chi phí, không lấy từ file example; ROI 0 chỉ hòa vốn, vì vậy nếu nhóm chấp nhận mức này thì pilot phải giới hạn, có mục tiêu học rõ và ngày xem lại, không tự mở rộng; `queue_stuck_max=0` vì không chấp nhận ca chờ quá SLA.
+- `pass_k_min` **0,95** là ngưỡng chặt: trên 22 ticket, 21/22 = 0,9545 đạt nhưng 20/22 = 0,9091 trượt, tức chỉ chấp nhận tối đa một ticket không ổn định qua cả năm seed. Nhóm cần đồng ý rõ với mức rủi ro này trước khi ký.
+- Ngày xem lại tiêu chí: **25/11/2026** · Ai dự: **Nguyễn Gia Bảo (2A202603647), Nguyễn Vũ Thành Long (2A202603635), Nguyễn Lê Hải Nam (2A202603699), Lê Thanh Tùng (`NV-TUNG`, PIC vận hành) và Trần Thị Hạnh (`NV-HANH`, người duyệt)**. (Đề xuất một tuần sau ngày lab; ghi lại ở Phiếu B mục B8.)
 
 **Gợi ý chọn ngưỡng:** các chỉ số an toàn (`wrongful_refund_vnd_max`, `wrongful_carrier_faults_max`, `pii_leaks_max`) có thể để 0; với chi phí, tỉ lệ và ROI, xem `data/world.json` mục `ops_facts`.
 
