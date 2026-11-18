@@ -16,7 +16,7 @@
       "Khi có 1 lỗi ghi oan cho hãng trong một ca (tracking không ghi nguyên nhân thuộc lỗi hãng) thì tắt ngay thao tác ghi file_carrier_fault.",
       "Khi có 1 lần trường dữ liệu cá nhân rời hệ thống sang hãng (notify_carrier còn recipient_contact/customer_note) thì tắt notify_carrier và dừng pilot.",
       "Khi tổng hoàn tự động trong ngày vượt 2.000.000đ (ngân sách Finance trong ops_limits) thì tắt hoàn tự động, chuyển toàn bộ sang người duyệt.",
-      "Khi một ca chờ người duyệt lâu nhất vượt 60 phút (review_sla_minutes) hoặc có từ 2 ca bị ùn trong một ca thì gọi thêm người; vượt 120 phút thì thu hẹp phạm vi pilot.",
+      "Khi một ca chờ người duyệt lâu nhất vượt 60 phút (review_sla_minutes) hoặc có từ 1 ca bị ùn trong một ca thì gọi thêm người; vượt 120 phút thì thu hẹp phạm vi pilot.",
       "Khi chi phí mỗi ticket vượt 10.000đ làm tay (manual_cost_per_ticket_vnd) hoặc ROI dưới ngưỡng đã ký trong hai ngày liên tiếp thì dừng pilot."
     ],
     "alert_channel": "Slack #logix-refund-oncall + SMS tới điện thoại trực ca của NV-TUNG",
