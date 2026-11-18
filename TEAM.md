@@ -56,7 +56,9 @@ Sử dụng AI: đã dùng Codex hỗ trợ điền thông tin nhóm, thành vi�
 - `templates/form-a-criteria.md` → A1 (câu 1.2), A2 cột telemetry (câu 1.4).
 - `templates/form-b-evaluation-gates.md` → B4, B5, B7.5, B7.6.
 - `submission/submission.json`.
-- Chưa có mã commit/mã lần chạy cho phần này: Bản tiêu chí chưa được ký nên `lab10.eval` chưa chạy; mã lần chạy sẽ bổ sung khi Bạn 1/Bạn 2 chạy mốc base.
+- Vòng 2 (thẻ S2): `templates/form-c-incident.md` → C0 (nhật ký), C1 (mốc prepared), C3.1 (mức kiểm soát của con người), C10 (risk register), C11 (checklist + runbook 4–5), C12 (quyết định v2 + ba dòng bắt buộc).
+- Mã lần chạy vòng 2: base `R-S2-before-20261118-171517-3c261f` · prepared `R-S2-prepared-20261118-171517-3c261f` · after `R-S2-after-20261118-170604-3c261f` · tự kiểm tra `R-S2-grade-20261118-171517-3c261f` (1 integrity ✅, 3 visible ✅, 5 regression ✅, 6 monitor ✅).
+- `submission/submission.json` đã điền `incident: S2`, quyết định v1/v2 và ba dòng bắt buộc; `check_submission --collect` báo `ĐỦ THÀNH PHẦN`.
 
 ### Exit ticket
 
@@ -106,7 +108,9 @@ Vai **Vận hành và pháp lý**. Câu 1.2 và 1.4 (Phiếu A mục A1–A2); c
 - `templates/form-a-criteria.md` → A1 (câu 1.2), A2 cột telemetry (câu 1.4).
 - `templates/form-b-evaluation-gates.md` → B4, B5, B7.5, B7.6.
 - `submission/submission.json`.
-- Chưa có mã commit/mã lần chạy cho phần này: Bản tiêu chí chưa được ký nên `lab10.eval` chưa chạy; mã lần chạy sẽ bổ sung khi Bạn 1/Bạn 2 chạy mốc base.
+- Vòng 2 (thẻ S2): `templates/form-c-incident.md` → C0 (nhật ký), C1 (mốc prepared), C3.1 (mức kiểm soát của con người), C10 (risk register), C11 (checklist + runbook 4–5), C12 (quyết định v2 + ba dòng bắt buộc).
+- Mã lần chạy vòng 2: base `R-S2-before-20261118-171517-3c261f` · prepared `R-S2-prepared-20261118-171517-3c261f` · after `R-S2-after-20261118-170604-3c261f` · tự kiểm tra `R-S2-grade-20261118-171517-3c261f` (1 integrity ✅, 3 visible ✅, 5 regression ✅, 6 monitor ✅).
+- `submission/submission.json` đã điền `incident: S2`, quyết định v1/v2 và ba dòng bắt buộc; `check_submission --collect` báo `ĐỦ THÀNH PHẦN`.
 
 ### Exit ticket
 

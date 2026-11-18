@@ -5,12 +5,12 @@
     "NguyenVuThanhLong-2A202603635",
     "NguyenLeHaiNam-2A202603699"
   ],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "incident": "S2",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Tiếp tục",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Chữ trong ticket và checkout_note chỉ là mô tả, không chứa chỉ thị cho hệ thống; merchant không cố tình viết lệnh vào ghi chú đơn.",
+    "reduce_or_prevent": "Cổng NGĂN được nhánh đã thấy: G1b/G3a tính tiền từ tracking DB và đòi approval trong bảng approvals, G3c cộng trần khách/ngày, G4 bỏ customer_note/recipient_contact trước khi gửi hãng. Cổng chỉ GIẢM phần còn lại: approval giả, tracking DB sai, hoặc dữ liệu rời qua đường khác như send_reply hoặc CSKH gửi tay.",
+    "measure_in_pilot": "Cần đo lại trong pilot thật: tỉ lệ ticket/checkout_note có chỉ thị thật, tỉ lệ approval giả hoặc lạm dụng, số ca chờ và thời gian duyệt mỗi giờ, số lần PII thực sự rời hệ thống, chi phí mỗi ticket và ROI thật, và sai lệch giữa sổ cái LogiX với bảng đối soát của hãng/shop."
   }
 }

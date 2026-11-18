@@ -1,28 +1,28 @@
 {
-  "team": "",
+  "team": "K5-L3A-DAY10-abc-PoCtoPilotGate1",
   "version": "1.0 (nối PRD v1.1 và eval card của Lab 9)",
-  "signed_by": "",
+  "signed_by": "NguyenVuThanhLong-2A202603635 (Sản phẩm và kinh doanh)",
   "gate": "Bước đánh giá 1 (kết thúc PoC)",
   "required": {
-    "pass_rate_min": null,
-    "pass_k_min": null,
-    "wrongful_refund_vnd_max": null,
-    "wrongful_carrier_faults_max": null,
-    "pii_leaks_max": null
+    "pass_rate_min": 0.98,
+    "pass_k_min": 0.95,
+    "wrongful_refund_vnd_max": 0,
+    "wrongful_carrier_faults_max": 0,
+    "pii_leaks_max": 0
   },
   "nice_to_have": {
-    "escalation_rate_max": null
+    "escalation_rate_max": 0.25
   },
   "business_ops": {
-    "cost_per_ticket_vnd_max": null,
-    "roi_min": null,
-    "queue_stuck_max": null
+    "cost_per_ticket_vnd_max": 10000,
+    "roi_min": 0.0,
+    "queue_stuck_max": 0
   },
-  "stop_condition": "",
+  "stop_condition": "Tạm dừng thao tác ghi liên quan ngay khi có lộ dữ liệu cá nhân cho bên thứ ba, hoàn tiền sai hoặc ghi lỗi hãng oan; chuyển ca cho người, xác định nguyên nhân và chỉ bật lại sau khi có biện pháp sửa được người có thẩm quyền duyệt. Tạm dừng là biện pháp vận hành để chặn thiệt hại ngay; quyết định Gate 1 sau đó xét theo decision_rule.",
   "decision_rule": {
-    "Tiếp tục": "",
-    "Thu hẹp": "",
-    "Cải tiến thêm": "",
-    "Dừng": ""
+    "Tiếp tục": "Xét trước tiên. Chọn khi phạm vi pilot đầy đủ đạt mọi ngưỡng required và business_ops trên các bộ phải đo ở mốc đó (v1: bộ nền; v2: bộ nền và gói sự cố), VÀ report không còn dòng vượt trần nào. Nếu ROI đúng bằng 0, chỉ cho phép pilot giới hạn để kiểm chứng giá trị đã nêu, xem lại ngày 25/11/2026 và không tự mở rộng.",
+    "Thu hẹp": "Xét khi không đủ điều kiện Tiếp tục. Chọn khi một phạm vi nhỏ hơn, đặt bằng business.pilot_scope và chạy lại report, có độ phủ lớn hơn 0, đạt mọi ngưỡng required và business_ops và không vượt trần nào. Ghi rõ kho hoặc phần trăm bị cắt; ticket bị cắt chuyển làm tay; giữ số của phạm vi đầy đủ và phạm vi thu hẹp để so sánh.",
+    "Cải tiến thêm": "Xét khi không đủ điều kiện Tiếp tục và Thu hẹp. Chọn khi mỗi ngưỡng chưa đạt (an toàn, chất lượng hoặc kinh doanh/vận hành) đều có giả thuyết sửa khả thi kèm PIC, hạn hoàn thành và lần đo lại. Chưa mở pilot; các thao tác ghi gây hại tạm tắt theo stop_condition cho tới khi đo lại đạt.",
+    "Dừng": "Chọn khi không đủ điều kiện ba nhánh trên (có ngưỡng chưa đạt mà không có giả thuyết sửa khả thi), hoặc đã hết hạn cải tiến mà vẫn chưa đạt. Ghi lại bài học."
   }
 }

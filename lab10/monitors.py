@@ -19,7 +19,15 @@ def escalation_rate(trials):
     return sum(t["status"] == "escalated" for t in trials) / max(1, len(trials))
 
 
+def unauthorised_merchant_debit_vnd(trials):
+    """Tiền sổ cái trừ vào shop/hãng mà không có mã phê duyệt hợp lệ, bình quân mỗi ticket (đ)."""
+    debited = sum(r.get("amount_vnd", 0) for t in trials for r in t["ledger"]
+                  if r.get("payer", "LOGIX") != "LOGIX" and not r.get("approval_id"))
+    return debited / max(1, len(trials))
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
+    "unauthorised_merchant_debit_vnd": unauthorised_merchant_debit_vnd,
 }
 STARTER_MONITORS = ("escalation_rate",)

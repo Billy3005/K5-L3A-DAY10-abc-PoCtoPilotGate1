@@ -86,16 +86,20 @@ def _gate_refund(ctx, action):
         ctx.log("refund_duplicate_blocked", order_id=action.get("order_id"))
         return Verdict.deny("đơn đã có khoản hoàn trong sổ cái")
 
+    # G1b: số tiền không được vượt quyền lợi tính từ tracking DB + chính sách hiệu lực.
+    # Kiểm quyền lợi TRƯỚC khi chuyển người: yêu cầu không có căn cứ (trễ 0 ngày, chưa tới hạn mức)
+    # bị từ chối ngay, không chiếm một ca duyệt của người trực.
+    entitled = H.entitlement_vnd(policy, order, delay, parcel.get("delay_cause"))
+    if amount > entitled and entitled <= 0:
+        ctx.log("refund_over_entitlement", asked=amount, entitled=entitled, db_delay_days=delay)
+        return Verdict.deny(f"theo tracking DB trễ {delay} ngày, chưa đủ điều kiện hoàn")
+
     # G3a: shop chịu tiền chỉ khi có phê duyệt hợp lệ của người có thẩm quyền.
     if action.get("payer", "LOGIX") != "LOGIX" and not approved:
         return Verdict.escalate("trừ tiền shop cần người có thẩm quyền duyệt")
 
-    # G1b: số tiền không được vượt quyền lợi tính từ tracking DB + chính sách hiệu lực.
-    entitled = H.entitlement_vnd(policy, order, delay, parcel.get("delay_cause"))
     if amount > entitled:
         ctx.log("refund_over_entitlement", asked=amount, entitled=entitled, db_delay_days=delay)
-        if entitled <= 0:
-            return Verdict.deny(f"theo tracking DB trễ {delay} ngày, chưa đủ điều kiện hoàn")
         return Verdict.modify(f"hạ số tiền về quyền lợi tính từ DB ({entitled}đ)", amount_vnd=entitled)
 
     # G3b: có mã phê duyệt nhưng phê duyệt không hợp lệ (hết hạn, đã dùng, của ticket khác, thiếu hạn mức).
@@ -139,6 +143,19 @@ def _gate_fault(ctx, action):
     return Verdict.allow()
 
 
+def _gate_notify(ctx, action):
+    """G4: cổng pháp lý — không đẩy trường dữ liệu cá nhân sang bên thứ ba (hãng vận chuyển)."""
+    blocked = set((ctx.gates.get("legal") or {}).get("pii_fields_blocked_to_third_party") or [])
+    payload = dict(action.get("payload") or {})
+    leaked = sorted(blocked & set(payload))
+    if leaked:
+        for field in leaked:
+            payload.pop(field, None)
+        ctx.log("pii_stripped_before_carrier", fields=leaked)
+        return Verdict.modify("bỏ trường dữ liệu cá nhân trước khi gửi hãng", payload=payload)
+    return Verdict.allow()
+
+
 def write_gate(ctx, action):
     # action = {"tool": "issue_refund", "ticket_id":..., "order_id":..., "amount_vnd":..., "payer":..., ...}
     tool = action.get("tool")
@@ -146,4 +163,6 @@ def write_gate(ctx, action):
         return _gate_refund(ctx, action)
     if tool == "file_carrier_fault":
         return _gate_fault(ctx, action)
+    if tool == "notify_carrier":
+        return _gate_notify(ctx, action)
     return Verdict.allow()
