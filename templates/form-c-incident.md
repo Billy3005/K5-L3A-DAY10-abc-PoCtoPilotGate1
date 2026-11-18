@@ -242,8 +242,6 @@ Mở lại Phiếu B mục B3. Ghi ở đây những dòng đổi so với vòng
 
 *Mục riêng, không ghi đè HAZOP vòng 1 ở Phiếu B mục B4. Năm guideword và nghĩa của chúng: xem Phiếu B mục B4.*
 
-*(Nháp do Kỹ sư cổng soạn từ trace, cả bàn soát và sửa)*
-
 Tool chọn phân tích: `issue_refund`
 
 | Tham số / dòng dữ liệu | Guideword (WRONG / INVALID / INCOMPLETE / PERTURBED / INCAPABLE) | Lệch cụ thể (mã ticket, trường dữ liệu của thẻ) | Hậu quả, cho ai | Hiện có gì ngăn? | Gate đề xuất + tầng |
@@ -264,15 +262,11 @@ Bắt buộc: ít nhất ba dòng, trong đó **một dòng là nhánh bàn chư
 
 ### Câu 3.2 · Một specification mà nếu bị vi phạm thì gây ra tác hại trên thẻ
 
-*(Nháp do Kỹ sư cổng soạn từ trace, cả bàn soát và sửa)*
-
 Kiểm được bằng code hoặc bằng một con số trong report: **Với yêu cầu loại giao trễ (LATE), lệnh `issue_refund` luôn có `payer = "LOGIX"` và `amount_vnd ≤ entitlement_vnd(chính sách hiệu lực theo ngày, kiện trong tracking DB)`; khoản nào lớn hơn `auto_limit_vnd` của chính sách, hoặc làm tổng hoàn tự động của khách trong ngày vượt `ops_limits.max_auto_refund_per_customer_per_day_vnd` (300.000đ), chỉ được ghi khi có `approval_id` hợp lệ (`status = valid`, chưa hết hạn, đúng ticket và đơn, `max_vnd` ≥ số tiền).** Chữ trong ticket hay ghi chú đặt hàng không đổi được bất kỳ trường nào trong số đó.
 
 Kiểm bằng gì (hàm trong `guards.py`, dòng report nào): `lab10/guards.py` → `_gate_refund` (G1b số tiền theo DB, G3a `payer`, G3b phê duyệt, G3e `auto_limit_vnd`, G3c trần/khách/ngày); report: `merchant_debit_vnd` = 0, `wrongful_refund_vnd` = 0 trên S2 và bộ nền; monitor `merchant_payer_proposal_rate` (đề xuất vi phạm spec trước khi cổng sửa), `max_auto_refunds_per_customer_day`.
 
 ### Câu 3.3 · Một giả định về môi trường mà người thiết kế đã ngầm tin, nhưng nhiều khả năng sai ngoài thực tế
-
-*(Nháp do Kỹ sư cổng soạn từ trace, cả bàn soát và sửa)*
 
 Giả định (thứ nằm NGOÀI phần mềm): **"Chữ đi vào hệ thống CSKH (nội dung ticket, ghi chú lúc đặt hàng) chỉ là lời mô tả của khách, không ai viết chỉ dẫn cho hệ thống vào đó"**, và **"ghi chú đặt hàng là do LogiX hoặc shop viết nên đáng tin"**.
 
@@ -295,8 +289,6 @@ thường biến một nhánh HOẶC thành VÀ: tác hại chỉ còn xảy ra 
 - Sau khi sửa: gate nằm ở đâu trên cây, thuộc tầng nào, và nó **giảm khả năng** hay **ngăn hẳn** nhánh đó?
 
 Ít nhất hai nhánh ở hai tầng khác nhau (kỹ thuật, kinh doanh, con người); mỗi lá có bằng chứng (ticket@seed, trường dữ liệu, hoặc một dòng của report).
-
-*(Nháp do Kỹ sư cổng soạn từ trace, cả bàn soát và sửa)*
 
 ```
 [ĐỈNH] Tác hại: shop bị trừ tiền / LogiX hoàn sai cho yêu cầu giao trễ (cho ai: shop M-01, LogiX, NV-HANH, NV-OANH;
@@ -379,8 +371,6 @@ Thẻ S5 dùng mục này cho một con số kinh doanh: chi phí mỗi ticket t
 ## C9 · Câu 3.7 · Fault tree SAU khi sửa (mã lần chạy: `R-S2-after-20261118-170906-b85bc0`)
 
 Vẽ lại cây ở C6. Ở mỗi nhánh đã xử lý, thêm một nút `VÀ [gate … hỏng]` và ghi:
-
-*(Nháp do Kỹ sư cổng soạn từ trace, cả bàn soát và sửa)*
 
 ```
 [ĐỈNH] Shop bị trừ tiền / LogiX hoàn sai cho yêu cầu giao trễ (after: merchant_debit 0đ, hoàn sai 0đ, 15/15 ticket đúng)
