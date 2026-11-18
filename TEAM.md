@@ -5,7 +5,7 @@
 - Tên nhóm (`TenNhom`, không dấu, không khoảng trắng): `abc`
 - Lớp: `L3A`
 - Repo của bàn: [K5-L3A-DAY10-abc-PoCtoPilotGate1](https://github.com/Billy3005/K5-L3A-DAY10-abc-PoCtoPilotGate1)
-- Thẻ sự cố đã bốc (S1–S8):
+- Thẻ sự cố đã bốc (S1–S8): `S2`
 
 ## Thành viên
 
@@ -76,15 +76,15 @@ Sản phẩm và kinh doanh: mục tiêu, tiêu chí chấp nhận, số liệu 
 
 ### Đóng góp cụ thể
 
-Trong CP4, rà soát số liệu kinh doanh của thẻ S2; ghi C1 và C3.1; thử phạm vi pilot hẹp hơn để so sánh; sau khi code vòng 2 cải thiện chi phí HCM, cập nhật dự thảo C12 về tiếp tục pilot ở phạm vi `all`. Dùng trợ lý AI để đọc trace/report và soạn nội dung; đã đối chiếu các con số với report `lab10.grade` trước khi ghi.
+Trong CP4, rà soát số liệu kinh doanh của thẻ S2; ghi C1 và C3.1; thử phạm vi pilot hẹp hơn để so sánh; sau khi code vòng 2 cải thiện chi phí HCM, cập nhật dự thảo C12 về tiếp tục pilot ở phạm vi `all`. Ở CP5, đối chiếu lại quyết định v2 với tiêu chí đã ký và mã grade chính thức, cập nhật bằng chứng run. Dùng Codex hỗ trợ đọc trace/report và soạn nội dung; đã đối chiếu số liệu với Phiếu C và report `lab10.grade` trước khi ghi.
 
 ### Bằng chứng
 
-Run cuối: `R-S2-grade-20261118-173036-641434` (PASS-VISIBLE; integrity, criteria, visible, regression, cả 3 monitor đều đạt; test ẩn chưa chạy). Phạm vi thử hẹp: `R-S2-grade-20261118-170947-ab3a59` (tham khảo; sau code vòng 2 đã chọn lại `all`). Mục Phiếu C: C0, C1, C3.1, C12; config: `business.pilot_scope=all`. Phần Phiếu C đang được ghi nhận trong thay đổi chờ commit của nhóm.
+Run chính thức được Phiếu C dẫn: `R-S2-grade-20261118-173544-641434` (PASS-VISIBLE; integrity, criteria, visible, regression và 6 kiểm tra monitor đạt; test ẩn chưa chạy). Phạm vi thử hẹp: `R-S2-grade-20261118-170947-ab3a59` (tham khảo; sau sửa đã chọn lại `all`). Mục Phiếu C phụ trách: C0, C1, C3.1, C12; config: `business.pilot_scope=all`. Đối chiếu tại `templates/form-c-incident.md` và quyết định v2 khớp nhánh “Tiếp tục” trong `decision_rule` đã ký.
 
 ### Exit ticket
 
-Thành viên tự ghi một điều học được, một điều còn chưa chắc.
+Một điều học được: quyết định “Tiếp tục” phải dựa đồng thời trên bộ nền, thẻ sự cố và các ngưỡng đã ký; pass_rate tốt chưa đủ nếu chi phí hoặc hàng chờ còn vượt trần. Một điều còn chưa chắc: test ẩn và dữ liệu pilot thật có thể bộc lộ cách injection mới hoặc chi phí đối soát khác mock, nên cần theo dõi trước khi mở rộng.
 
 ## NguyenLeHaiNam-2A202603699
 
