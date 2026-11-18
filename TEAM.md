@@ -76,11 +76,11 @@ Sản phẩm và kinh doanh: mục tiêu, tiêu chí chấp nhận, số liệu 
 
 ### Đóng góp cụ thể
 
-Thành viên tự bổ sung đóng góp và việc sử dụng AI (nếu có).
+Trong CP4, rà soát số liệu kinh doanh của thẻ S2; ghi C1 và C3.1; thử phạm vi pilot hẹp hơn để so sánh; sau khi code vòng 2 cải thiện chi phí HCM, cập nhật dự thảo C12 về tiếp tục pilot ở phạm vi `all`. Dùng trợ lý AI để đọc trace/report và soạn nội dung; đã đối chiếu các con số với report `lab10.grade` trước khi ghi.
 
 ### Bằng chứng
 
-Thành viên tự bổ sung mã commit, mã lần chạy và mục phiếu liên quan.
+Run cuối: `R-S2-grade-20261118-173036-641434` (PASS-VISIBLE; integrity, criteria, visible, regression, cả 3 monitor đều đạt; test ẩn chưa chạy). Phạm vi thử hẹp: `R-S2-grade-20261118-170947-ab3a59` (tham khảo; sau code vòng 2 đã chọn lại `all`). Mục Phiếu C: C0, C1, C3.1, C12; config: `business.pilot_scope=all`. Phần Phiếu C đang được ghi nhận trong thay đổi chờ commit của nhóm.
 
 ### Exit ticket
 
