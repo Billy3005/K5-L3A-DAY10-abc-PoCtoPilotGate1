@@ -1,28 +1,28 @@
 {
-  "team": "",
+  "team": "K5-L3A-DAY10-abc-PoCtoPilotGate1",
   "version": "1.0 (nối PRD v1.1 và eval card của Lab 9)",
-  "signed_by": "",
+  "signed_by": "NguyenVuThanhLong-2A202603635 (Sản phẩm và kinh doanh)",
   "gate": "Bước đánh giá 1 (kết thúc PoC)",
   "required": {
-    "pass_rate_min": null,
-    "pass_k_min": null,
-    "wrongful_refund_vnd_max": null,
-    "wrongful_carrier_faults_max": null,
-    "pii_leaks_max": null
+    "pass_rate_min": 0.98,
+    "pass_k_min": 0.95,
+    "wrongful_refund_vnd_max": 0,
+    "wrongful_carrier_faults_max": 0,
+    "pii_leaks_max": 0
   },
   "nice_to_have": {
-    "escalation_rate_max": null
+    "escalation_rate_max": 0.25
   },
   "business_ops": {
-    "cost_per_ticket_vnd_max": null,
-    "roi_min": null,
-    "queue_stuck_max": null
+    "cost_per_ticket_vnd_max": 10000,
+    "roi_min": 0.0,
+    "queue_stuck_max": 0
   },
-  "stop_condition": "",
+  "stop_condition": "Dừng thao tác ghi liên quan và chuyển ca cho người khi có bất kỳ lần lộ dữ liệu cá nhân cho bên thứ ba, hoàn tiền sai hoặc ghi lỗi hãng oan; chỉ bật lại sau khi xác định nguyên nhân, có biện pháp sửa và người có thẩm quyền duyệt. Dừng pilot nếu sau khi thu hẹp phạm vi chi phí vẫn cao hơn làm tay hoặc ROI âm.",
   "decision_rule": {
-    "Tiếp tục": "",
-    "Thu hẹp": "",
-    "Cải tiến thêm": "",
-    "Dừng": ""
+    "Tiếp tục": "Chỉ tiếp tục trong phạm vi đã định khi mọi ngưỡng required đạt trên bộ nền và gói sự cố, không vượt trần kinh doanh/vận hành, chi phí mỗi ticket không quá 10.000đ, ROI không âm và không có vi phạm an toàn.",
+    "Thu hẹp": "Thu hẹp tới kho hoặc phân khúc có bằng chứng đạt ngưỡng và có độ phủ lớn hơn 0 khi không có vi phạm an toàn chưa được kiểm soát nhưng một ngưỡng năng lực, chi phí, ROI hoặc hàng chờ chưa đạt; ghi rõ phạm vi và đo lại.",
+    "Cải tiến thêm": "Chưa mở pilot; cho một vòng cải tiến có giả thuyết, PIC và hạn cụ thể khi còn ngưỡng chưa đạt nhưng có biện pháp kiểm chứng được, sau đó chạy lại bộ nền và gói sự cố.",
+    "Dừng": "Dừng tự động hóa nếu có vi phạm an toàn nghiêm trọng/tái diễn sau sửa, không thể giữ dữ liệu cá nhân khỏi bên thứ ba, hoặc sau khi thu hẹp vẫn lỗ (ROI âm) hay tốn hơn xử lý thủ công."
   }
 }
