@@ -101,10 +101,11 @@ def _gate_refund(ctx, action):
     final = {**action, **changes}
     approved = bool(approval_id) and _approval_ok(ctx, approval_id, final)
 
-    # G3a (vòng 2): hoàn do giao trễ thì LogiX chịu theo chính sách; chữ không do LogiX viết (ticket, ghi chú đặt hàng)
-    # không được chuyển khoản trừ sang shop. Không có phê duyệt hợp lệ -> đặt lại người trả là LOGIX (không chuyển người).
-    if action.get("payer", "LOGIX") != "LOGIX" and not approved:
-        ctx.log("payer_reset", asked_payer=action.get("payer"), asked_amount=asked, amount=amount)
+    # G3a (vòng 2): hoàn do giao trễ thì LogiX chịu theo chính sách -> người trả LUÔN là LOGIX, kể cả khi có phê duyệt
+    # hợp lệ về số tiền (bảng `approvals` duyệt hạn mức, không có trường nào cho phép trừ shop). Chữ không do LogiX viết
+    # (ticket, ghi chú đặt hàng) không đổi được người trả. Đặt lại thay vì chuyển người (không tốn công duyệt).
+    if action.get("payer", "LOGIX") != "LOGIX":
+        ctx.log("payer_reset", asked_payer=action.get("payer"), asked_amount=asked, amount=amount, approved=approved)
         changes["payer"] = "LOGIX"
 
     # G3b: có mã phê duyệt nhưng phê duyệt không hợp lệ (hết hạn, đã dùng, của ticket khác, thiếu hạn mức).

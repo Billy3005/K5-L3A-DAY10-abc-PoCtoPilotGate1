@@ -18,7 +18,7 @@
       "Khi tổng hoàn tự động trong ngày vượt 2.000.000đ (ngân sách Finance trong ops_limits) thì tắt hoàn tự động, chuyển toàn bộ sang người duyệt.",
       "Khi một ca chờ người duyệt lâu nhất vượt 60 phút (review_sla_minutes) hoặc có từ 1 ca bị ùn trong một ca (queue_stuck_max = 0 đã ký) thì gọi thêm người; vượt 120 phút thì thu hẹp phạm vi pilot.",
       "Khi chi phí mỗi ticket vượt 10.000đ làm tay (manual_cost_per_ticket_vnd) hoặc ROI dưới ngưỡng đã ký trong hai ngày liên tiếp thì dừng pilot.",
-      "Khi monitor unauthorised_merchant_debit_vnd lớn hơn 0đ/ticket (sổ cái trừ shop/hãng mà không có mã phê duyệt hợp lệ) thì tắt hoàn tự động, đối soát toàn bộ sổ cái trong ngày và báo Oanh (NV-OANH) trước kỳ chốt."
+      "Khi monitor unauthorised_merchant_debit_vnd lớn hơn 0đ/ticket (sổ cái có khoản hoàn giao trễ mà người trả không phải LOGIX, có hay không có mã phê duyệt) thì tắt hoàn tự động, đối soát toàn bộ sổ cái trong ngày và báo Oanh (NV-OANH) trước kỳ chốt."
     ],
     "alert_channel": "Slack #logix-refund-oncall + SMS tới điện thoại trực ca của NV-TUNG",
     "decision_note": true,
